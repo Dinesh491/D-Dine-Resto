@@ -704,7 +704,9 @@ app.post("/clear-cart", (req, res) => {
 
 
 
-app.listen(8080, (req, res) => {
-    console.log("app is listening");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 });
+
 
