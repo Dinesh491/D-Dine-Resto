@@ -1,0 +1,285 @@
+<% layout("/layouts/boilerplate") %>
+
+
+<div class="checkout-background">
+    <div class="order-page">
+        <div class="order-page-content">
+    <h4>Order Items</h4>
+    <hr>
+
+    <% for(let item of cartDetails) { %>    
+        <div class="order-item-card" data-id="<%= item.id %>">
+
+
+            <div class="order-item-info">
+                <% if (item.type === "veg") { %>
+                    <div class="veg-symbol s">
+                        <div class="circle"></div>
+                    </div>
+                <% } else { %>
+                    <div class="nonVeg-symbol s">
+                        <div class="triangle"></div>
+                    </div>
+                <% } %>
+                <h6 class="order-item-name"><%= item.name %></h6>
+            </div>
+            <div class="image-container">
+                <div class="counter order-cou">
+                    <button class="decrement order-dec">-</button>
+                    <span class="quantity order-qua"><%= item.quantity %></span>
+                    <button class="increment order-inc">+</button>
+                </div>
+            </div>
+            <div>
+                <span class="item-cost">
+                    <span class="hidden-item-cost"><%= item.price %></span>
+                    <span class="total-item-cost">&#8377;<%= item.price * item.quantity %></span>
+                </span>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="form-floating">
+        <textarea class="form-control" placeholder="Leave a comment here" id="order-text" style="height: 50px"></textarea>
+        <label for="order-text" id="order-text-label"><span class="upper-comma">&ldquo;</span>&nbsp; Any suggestions to our chefs ?...</label>
+      </div>
+
+      <hr>
+
+      <h6>Address :</h6>
+
+      <form>
+        <div class="mb-3">
+          <label for="customerName" class="form-label">Name</label>
+          <input type="text" id="customerName" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="houseNumber" class="form-label">House Number</label>
+          <input type="text" id="houseNumber" class="form-control" inputmode="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9\/-]/g, '')">
+        </div>
+        <div class="mb-3">
+          <label for="street" class="form-label">Street</label>
+          <input type="text" id="street" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="city" class="form-label">City</label>
+          <input type="text" id="city" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="state" class="form-label">State</label>
+          <input type="text" id="state" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="pincode" class="form-label">Pincode</label>
+          <input type="text" id="pincode" class="form-control" inputmode="numeric" maxlength="6" pattern="\d*" oninput="this.value = this.value.replace(/\D/g, '')">
+
+        </div>
+        <div class="mb-3">
+          <label for="contactNumber" class="form-label">Contact Number</label>
+          <input type="text" id="contactNumber" class="form-control" inputmode="numeric" maxlength="10" pattern="\d*" oninput="this.value = this.value.replace(/\D/g, '')">
+        </div>
+        <div class="mb-3">
+          <label for="nearby" class="form-label">Nearby</label>
+          <input type="text" id="nearby" class="form-control">
+        </div>
+      </form>
+      
+      <hr>
+
+      <h6>Bill Details</h6>
+
+      <div class="item-total-and-price Bill">
+        <div class="item-total">Item Total</div>
+        <div class="item-total-price" id="grand-total"><%= grandTotal %></div>
+      </div>
+      
+      <div class="gst Bill">
+        <div class="gst-text">GST & Other Charges</div>
+        <div class="gst-price" id="gst-amount"><%= gstAmount %></div>
+      </div>
+
+      <div class="gst Bill">
+        <div class="gst-text">Delivery Charges</div>
+        <div class="gst-price delivery-charges" id="delivery-charges"><%= deliveryCharges %></div>
+      </div>
+
+      <hr>
+
+      <div class="grand-total Bill">
+        <h6 class="grand-total-text">TO PAY</h6>
+        <h6 class="grand-total-price" id="final-amount"><%= finalAmount %></h6>
+      </div>
+
+      <hr>
+      
+<br>
+      <h6>
+            We accept only Pay on Delivery. <br>
+You can pay via UPI, Cash, or Online Payment at the time of delivery.
+        </h6>
+        <br><br>
+        <div class="order-btn-div">
+          <button class="btn order-btn" >
+            <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="order-btn-span" style="font-weight: 600;">Fire Up the Kitchen</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
+          </button>
+        </div>
+    
+    </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      let counters = document.querySelectorAll(".order-cou");
+
+      counters.forEach(counter => {
+          const quantitySpan = counter.querySelector(".order-qua");
+          const incrementBtn = counter.querySelector(".order-inc");
+          const decrementBtn = counter.querySelector(".order-dec");
+          const parentCard = counter.closest(".order-item-card");
+          const totalPriceOfItem = parentCard.querySelector(".total-item-cost");
+          const pricePerItem = parentCard.querySelector(".hidden-item-cost");
+          const itemId = parentCard.dataset.id;
+
+          incrementBtn.addEventListener("click", async () => {
+              let currentQuantity = parseInt(quantitySpan.textContent, 10);
+              quantitySpan.textContent = currentQuantity + 1;
+              let price = parseInt(pricePerItem.textContent);
+              totalPriceOfItem.textContent = `₹${(price * (currentQuantity + 1))}`;
+              await updateSession(itemId, currentQuantity + 1);
+              recalculateTotals();
+          });
+
+          decrementBtn.addEventListener("click", async () => {
+              let currentQuantity = parseInt(quantitySpan.textContent, 10);
+              if (currentQuantity > 1) {
+                  quantitySpan.textContent = currentQuantity - 1;
+                  let price = parseInt(pricePerItem.textContent);
+                  totalPriceOfItem.textContent = `₹${(price * (currentQuantity - 1))}`;
+                  await updateSession(itemId, currentQuantity - 1);
+              } else {
+                  parentCard.remove();
+                  await updateSession(itemId, 0);
+              }
+              recalculateTotals();
+          });
+      });
+
+      async function updateSession(id, quantity) {
+          try {
+              const response = await fetch("/session", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ id, quantity }),
+              });
+              const data = await response.json();
+              console.log("Session updated:", data);
+          } catch (error) {
+              console.error("Error updating session:", error);
+          }
+      }
+
+      function recalculateTotals() {
+          if (document.querySelectorAll(".order-item-card").length === 0) {
+              showEmptyCartAlert();
+          }
+
+          let total = 0;
+          document.querySelectorAll(".order-item-card").forEach(card => {
+              const quantity = parseInt(card.querySelector(".order-qua").textContent, 10);
+              const price = parseInt(card.querySelector(".hidden-item-cost").textContent);
+              total += price * quantity;
+          });
+
+          const gstPercentage = 5;
+          const gst = Math.round((total * gstPercentage) / 100);
+          const delivery = parseInt(document.getElementById("delivery-charges").textContent.replace("₹", "")) || 0;
+          const final = total + gst + delivery;
+
+          document.getElementById("grand-total").textContent = `₹${total}`;
+          document.getElementById("gst-amount").textContent = `₹${gst}`;
+          document.getElementById("final-amount").textContent = `₹${final}`;
+      }
+
+      function showEmptyCartAlert() {
+          Swal.fire({
+              icon: 'warning',
+              title: 'Cart is empty!',
+              text: 'Please add items before placing your order.',
+              confirmButtonColor: '#d33',
+              customClass: {
+                  popup: 'custom-alert'
+              }
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  window.location.href = "/delivery";
+              }
+          });
+      }
+
+      let orderBtn = document.querySelector(".order-btn");
+
+      orderBtn.addEventListener("click", async () => {
+          let itemCards = document.querySelectorAll(".order-item-card");
+          if (itemCards.length === 0) {
+              showEmptyCartAlert();
+              return;
+          }
+
+          let finalAmountPrice = parseFloat(document.getElementById("final-amount").textContent.replace("₹", ""));
+          let orderText = document.getElementById("order-text").value.trim() || "Empty";
+
+          let customerName = document.getElementById("customerName").value.trim();
+          let houseNumber = document.getElementById("houseNumber").value.trim();
+          let street = document.getElementById("street").value.trim();
+          let city = document.getElementById("city").value.trim();
+          let pincode = document.getElementById("pincode").value.trim();
+          let contactNumber = document.getElementById("contactNumber").value.trim();
+          let nearby = document.getElementById("nearby").value.trim();
+          let state = document.getElementById("state").value.trim();
+
+          if (!customerName || !houseNumber || !street || !city || !state || !pincode || !contactNumber) {
+              Swal.fire({
+                  icon: 'warning',
+                  title: 'Missing Information!',
+                  text: 'Please fill in all required fields.',
+                  confirmButtonColor: '#d33'
+              });
+              return;
+          }
+
+          // Check allowed city and state
+          const allowedCities = ["warangal", "hanamkonda"];
+          const allowedState = "telangana";
+
+          if (
+              !allowedCities.includes(city.toLowerCase()) ||
+              state.toLowerCase() !== allowedState
+          ) {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Service Unavailable!',
+                  text: 'We only deliver to Warangal and Hanamkonda in Telangana.',
+                  confirmButtonColor: '#d33'
+              });
+              return;
+          }
+
+          // Submit your order here
+          // You can call a function like `submitOrder()` or redirect or make a POST request
+          console.log("All data valid. Proceeding to place the order...");
+          // Example (replace with real logic):
+          // await submitOrder({ ... });
+
+      });
+  });
+</script>
+
+
+
+

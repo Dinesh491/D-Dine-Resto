@@ -1,0 +1,22 @@
+<button class="view-cart-bar" onclick="viewCart()">
+     <div class="view-cart hidden"> 
+        <div class="item-nums"></div>
+        <div class="cart-icon">
+            <span>VIEW CART</span>
+            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_28,h_28/ChatbotAssets/Checkout_Cart" alt="cartImage">
+        </div>
+     </div>
+</button>
+
+<script>
+    function viewCart() {
+        const currentPath = window.location.pathname;
+
+        if(currentPath.includes("/dineIn")){
+            window.location.href = "/dineIn/viewCart";
+        }
+        else {
+            window.location.href = "/delivery/viewCart";
+        }
+    }
+</script>

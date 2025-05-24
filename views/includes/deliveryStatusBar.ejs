@@ -1,0 +1,99 @@
+<button 
+  class="deliveryStatusBar-btn hidden-bar" 
+  onclick="goToDeliveryOrderPage()" 
+  style="position: fixed; bottom: 40px; transition: bottom 0.3s ease;"
+>
+  <div class="orderStatusBar" id="deliveryStatusBar">
+    <div class="progress-meter" id="deliveryProgressMeter">
+      <div id="deliveryProgressFill" class="progress-fill"></div>
+    </div>
+    <div id="deliveryOrderMessage" class="order-message"></div>
+  </div>
+</button>
+
+
+<script>
+  const deliveryTotalTime = 25 * 60; // 25 minutes in seconds
+  const deliveryPrepTime = 10 * 60; // 10 minutes in seconds
+
+  const deliveryElements = {
+    btn: document.querySelector(".deliveryStatusBar-btn"),
+    message: document.getElementById("deliveryOrderMessage"),
+    meter: document.getElementById("deliveryProgressMeter"),
+    fill: document.getElementById("deliveryProgressFill"),
+  };
+
+  function goToDeliveryOrderPage() {
+    window.location.href = "/showDeliveryOrderPage";
+  }
+
+  function toggleDeliveryBar(show) {
+    deliveryElements.btn?.classList.toggle("hidden-bar", !show);
+  }
+
+  function updateDeliveryContent(progress, elapsed) {
+    deliveryElements.fill.style.width = `${progress}%`;
+
+    const timeLeft = Math.max(0, deliveryTotalTime - elapsed);
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+    let text = "";
+    if (elapsed < deliveryPrepTime) {
+      text = `Your order is being prepared. Estimated time left for Delivery: (${formattedTime}) mins – click to check your order details.`;
+    } else {
+      text = `Out for delivery (${formattedTime} mins). You’ll get a call.  – click to check your order details.`;
+    }
+
+    deliveryElements.message.innerHTML = text;
+  }
+
+  function animateDeliveryProgress() {
+    const start = parseInt(sessionStorage.getItem("deliveryStartTime"));
+    if (!start) return;
+
+    const timer = setInterval(() => {
+      toggleDeliveryBar(true);
+
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      const timeLeft = Math.max(0, deliveryTotalTime - elapsed);
+      const progress = (elapsed / deliveryTotalTime) * 100;
+
+      if (timeLeft > 0) {
+        deliveryElements.meter.style.display = "block";
+        updateDeliveryContent(progress, elapsed);
+      } else {
+        clearInterval(timer);
+        toggleDeliveryBar(false);
+        sessionStorage.removeItem("deliveryStartTime");
+        sessionStorage.removeItem("showDeliveryBar");
+      }
+    }, 1000);
+  }
+
+  window.onload = () => {
+    if (!deliveryElements.btn || !deliveryElements.message || !deliveryElements.meter) return;
+
+    const blockedRoutes = [
+      "/appetizers", "/beverages", "/mainCourse", "/desserts",
+      "/mandi", "/checkOut", "/viewCart", "/dineInOrders",
+      "/deliveryOrders", "/showDeliveryOrderPage", "/dineIn", "/showDineInOrderPage"
+    ];
+
+    const currentPath = window.location.pathname;
+
+    // If the current path includes any blocked route substring, don't show the bar
+    if (blockedRoutes.some(route => currentPath.includes(route))) {
+      toggleDeliveryBar(false);
+      return;
+    }
+
+    toggleDeliveryBar(false);
+
+    const showDeliveryBar = sessionStorage.getItem("showDeliveryBar") === "true";
+    if (showDeliveryBar) {
+      animateDeliveryProgress();
+    }
+  };
+</script>

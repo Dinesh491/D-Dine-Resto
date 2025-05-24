@@ -1,0 +1,134 @@
+<% layout("/layouts/boilerplate") %>
+
+
+<div class="checkout-background">
+    <div class="order-page">
+        <div class="order-page-content">
+
+          <div class="row mt-3">
+            <h2>Register as a Chef</h2>
+            <br><hr>
+            <div class="col-10 offset-1">
+
+              <form id="chefSignupForm" action="/signup" method="POST" class="needs-validation" novalidate>
+                      <div class="mb-3">
+                        <label for="username" class="form-label"><b>ChefName :</b> </label>
+                        <input id="username" name="username" type="text" class="form-control" 
+       pattern="^[A-Za-z ]+$" 
+       title="Username should contain only letters and spaces" required minlength="5">
+<div class="invalid-feedback">minumum length = 5</div>
+
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="email" class="form-label"><b>Email :</b> </label>
+                        <input id="email" name="email" type="email" class="form-control" required>
+                        <div class="invalid-feedback">Please enter a valid email.</div>
+
+                      </div>
+
+                      
+                      <div class="mb-3">
+                        <label for="password" class="form-label"><b>Password :</b> </label>
+                        <input id="password" name="password" type="password" class="form-control" required minlength="7">
+                        <div class="invalid-feedback">
+                         Password must be at least 7 characters long.
+                             </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="registrationKey" class="form-label"><b>Enter Registration Key :</b> </label>
+                        <input id="registrationKey" name="registrationKey" type="text" class="form-control" required>
+                        <div class="invalid-feedback">
+                                  Please Enter the Registration Key
+                               </div>
+                      </div>
+
+                      <span style="padding-left: 30px;">
+                        <button class="btn order-btn">
+            <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="order-btn-span" style="font-weight: 600;">Signup</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
+          </button>
+                      </span>
+                      
+                  </form>
+            </div>
+          </div>
+
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Activate Bootstrap 5 form validation
+(() => {
+  'use strict'
+
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+
+document.getElementById("chefSignupForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return;
+  }
+
+  const formData = new FormData(form);
+  const data = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    registrationKey: formData.get("registrationKey")
+  };
+
+  try {
+    const response = await fetch("/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      window.location.href = "/login";
+    } else {
+      const result = await response.json();
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: result.error || 'Something went wrong!',
+        confirmButtonText: 'OK',
+        customClass: {
+            popup: 'custom-alert'
+        }
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Network Error',
+      text: error.message || 'An error occurred!',
+      confirmButtonText: 'OK',
+      customClass: {
+            popup: 'custom-alert'
+        }
+    });
+  }
+});
+</script>

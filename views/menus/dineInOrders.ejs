@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate") %>
+
+<h1>
+    DineIn Orders
+</h1>
+
+<% for (let order of dineInOrders) { %>
+
+  <a href="/dineInOrderCheck/<%= encodeURIComponent(order._id) %>" class="order-link">
+
+        <div class="order-card" data-id="<%= order.id %>">
+          <div class="order-info">
+            <div class="order-tb-no">
+              Table Number : <%= order.tableNumber %>
+            </div>
+            <br>
+            <div class="created-time">
+              Time : <%= order.formattedDate %>
+            </div>
+            <br>
+            <div class="order-text-chef">
+              Instructions : <%= order.orderText %>
+            </div>
+          </div>
+        </div>
+      </a>
+      <hr>
+      
+
+    <% } %>
+
+
+    <script>
+    // Check if the current page is /dineInOrders or /deliveryOrders
+    if (window.location.pathname === "/dineInOrders" || window.location.pathname === "/deliveryOrders") {
+      // Refresh the page every 10 seconds
+      setInterval(function() {
+        location.reload();
+      }, 10000); // Refresh every 10 seconds
+    }
+  </script>
+
+    

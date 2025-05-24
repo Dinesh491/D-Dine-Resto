@@ -1,0 +1,36 @@
+<% layout("/layouts/boilerplate") %>
+
+<h1>Desserts</h1>
+
+<% for (let item of desserts) { %>
+    <div class="item-card" data-id="<%= item.id %>">
+        <div class="item-info">
+            <% if (item.type === "veg") { %> 
+                <div class="veg-symbol">
+                    <div class="circle"></div>
+                </div>
+            <% } else { %>
+                <div class="nonVeg-symbol">
+                    <div class="triangle"></div>
+                </div>
+            <% } %>
+
+            <h3 class="name">
+                <%= item.name %>
+            </h3>
+            <p class="price">
+                &#8377;<%= item.price %>
+            </p>
+            <p class="description">
+                <%= item.description %>
+            </p>
+        </div>
+ 
+        <div class="dish-image">
+            <div class="image-container">
+                <img class="noHover" src="<%= item.image.url %>" alt="<%= item.name %>" />
+                <button class="btn add-btn" type="button">ADD</button>
+            </div>
+        </div>
+    </div>
+<% } %>

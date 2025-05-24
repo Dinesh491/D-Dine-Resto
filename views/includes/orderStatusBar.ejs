@@ -1,0 +1,160 @@
+<button class="orderStatusBar-btn hidden-bar" onclick="goToOrderPage()">
+  <div class="orderStatusBar" id="orderStatusBar">
+    <div class="progress-meter" id="progressMeter">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div id="orderMessage" class="order-message"></div>
+  </div>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const totalTime = 600; // 10 minutes in seconds
+  const messageDelay = 6000; // 1 minute in ms
+  const finalBarDelay = 300000; // 5 minutes in ms
+
+  const excludedPaths = ["/appetizers", "/beverages", "/mainCourse", "/desserts", "/mandi", "/checkOut", "/viewCart", "/dineInOrders", "/showDineInOrderPage", "/showDeliveryOrderPage", "/deliveryOrders", "delivery"];
+  const currentPath = window.location.pathname;
+
+  const elements = {
+    btn: document.querySelector(".orderStatusBar-btn"),
+    message: document.getElementById("orderMessage"),
+    meter: document.getElementById("progressMeter"),
+    fill: document.getElementById("progressFill"),
+  };
+
+  const formatTime = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+
+  function goToOrderPage() {
+    const phase = sessionStorage.getItem("barPhase");
+    if (phase === "final") {
+      Swal.fire({
+        title: 'Select Payment Method',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Pay with Cash',
+        cancelButtonText: 'QR Code',
+        reverseButtons: true,
+        customClass: {
+            popup: 'custom-alert'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch('/resetTotalAmount', { method: 'POST' })
+            .then(() => {
+              hideOrderStatusBar();
+              Swal.fire('Thank you!', 'Payment marked as Cash.', 'success');
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          fetch('/generateUPIQRCode')
+            .then(res => res.json())
+            .then(data => {
+              if (data.qrImage) {
+                Swal.fire({
+                  title: `Scan to Pay ₹${data.amount}`,
+                  html: `<img src="${data.qrImage}" style="width: 200px; height: 200px;" /><br><br><button id="paymentDoneBtn" class="swal2-confirm swal2-styled">Payment Completed</button>`,
+                  showConfirmButton: false,
+                  customClass: {
+            popup: 'custom-alert'
+        },
+                  didOpen: () => {
+                    document.getElementById('paymentDoneBtn').addEventListener('click', () => {
+                      fetch('/resetTotalAmount', { method: 'POST' })
+                        .then(() => {
+                          hideOrderStatusBar();
+                          Swal.fire('Thank you!', 'Payment marked as Completed.', 'success');
+                        });
+                    });
+                  }
+                });
+              } else {
+                Swal.fire('Error', 'Unable to generate QR code.', 'error');
+              }
+            })
+            .catch(() => {
+              Swal.fire('Error', 'Server issue while generating QR code.', 'error');
+            });
+        }
+      });
+    } else {
+      window.location.href = "/showDineInOrderPage";
+    }
+  };
+
+  function hideOrderStatusBar() {
+    elements.btn?.classList.add('hidden-bar');
+    sessionStorage.removeItem('barPhase');
+  }
+
+  function toggleBar(show) {
+    elements.btn?.classList.toggle("hidden-bar", !show);
+  }
+
+  function updateBarContent(progress, timeLeft) {
+    elements.fill.style.width = `${progress}%`;
+    elements.message.innerHTML = `Hang tight! Your order is being prepared (${formatTime(timeLeft)} remaining). Tap here to view order details.`;
+  }
+
+  function setFinalBar() {
+    sessionStorage.setItem("barPhase", "final");
+    elements.meter.style.display = "none";
+    elements.message.innerHTML = "Complete your experience - proceed to payment.";
+    toggleBar(true);
+  }
+
+  function animateProgress() {
+    let start = parseInt(sessionStorage.getItem("orderStartTime"));
+    if (!start) return;
+
+    const timer = setInterval(() => {
+      if (excludedPaths.some(p => currentPath.includes(p))) {
+        toggleBar(false);
+        return;
+      }
+
+      toggleBar(true);
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      const timeLeft = Math.max(0, totalTime - elapsed);
+      const progress = (elapsed / totalTime) * 100;
+
+      if (timeLeft > 0) {
+        elements.meter.style.display = "block";
+        updateBarContent(progress, timeLeft);
+      } else {
+        clearInterval(timer);
+        elements.meter.style.display = "none";
+        elements.message.innerHTML = "Your order is ready and will be delivered shortly.";
+        sessionStorage.removeItem("orderStartTime");
+        sessionStorage.removeItem("showOrderBar");
+
+        setTimeout(() => {
+          toggleBar(false);
+          setTimeout(() => {
+            if (!excludedPaths.some(p => window.location.pathname.includes(p))) {
+              setFinalBar();
+            }
+          }, finalBarDelay);
+        }, messageDelay);
+      }
+    }, 1000);
+  }
+
+  window.onload = () => {
+    if (!elements.btn || !elements.message || !elements.meter) return;
+
+    toggleBar(false);
+
+    if (excludedPaths.some(p => currentPath.includes(p))) return;
+
+    const showBar = sessionStorage.getItem("showOrderBar") === "true";
+    const finalPhase = sessionStorage.getItem("barPhase") === "final";
+
+    if (showBar) {
+      animateProgress();
+    } else if (finalPhase) {
+      elements.meter.style.display = "none";
+      elements.message.innerHTML = "Complete your experience - proceed to payment.";
+      toggleBar(true);
+    }
+  };
+</script>

@@ -1,0 +1,72 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/" onclick="redirect(event)">
+      <img src="/images/logo.jpg" alt="D-Dine Logo" class="logo">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" href="#" onclick="redirect()">Home</a>
+        <a class="nav-link" href="/signup" onclick="showSignupAlert(event)">Signup</a>
+        <a class="nav-link" href="/login" onclick="showLoginAlert(event)">Login</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  function redirect(event) {
+    if (event) event.preventDefault();
+
+    const currentPath = window.location.pathname;
+
+    if (currentPath.includes("/dineIn")) {
+      window.location.href = "/dineIn";
+    } else {
+      window.location.href = "/delivery";
+    }
+  }
+
+  function showSignupAlert(event) {
+    event.preventDefault();
+    Swal.fire({
+      icon: 'info',
+      title: 'Signup Notice',
+      text: 'Signup is strictly for restaurant chefs only.',
+      showCancelButton: true,
+      confirmButtonText: 'I am Chef',
+      cancelButtonText: 'Back',
+      reverseButtons: true,
+      customClass: {
+            popup: 'custom-alert'
+        }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '/signup';
+      }
+      // else do nothing if canceled (Back)
+    });
+  }
+
+  function showLoginAlert(event) {
+    event.preventDefault();
+    Swal.fire({
+      icon: 'info',
+      title: 'Login Notice',
+      text: 'Login is strictly for restaurant chefs only.',
+      showCancelButton: true,
+      confirmButtonText: 'I am Chef',
+      cancelButtonText: 'Back',
+      reverseButtons: true,
+      customClass: {
+            popup: 'custom-alert'
+        }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '/login';
+      }
+      // else do nothing if canceled (Back)
+    });
+  }
+</script>

@@ -1,0 +1,123 @@
+<% layout("/layouts/boilerplate") %>
+
+
+<div class="checkout-background">
+    <div class="order-page">
+        <div class="order-page-content">
+
+          <div class="row mt-3">
+            <h2> Chef Login</h2>
+            <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Pls signup before you login</b>
+            <br><hr>
+            <div class="col-10 offset-1">
+
+              <form id="chefLoginForm" action="/signup" method="POST" class="needs-validation" novalidate>
+                      <div class="mb-3">
+                        <label for="username" class="form-label"><b>ChefName :</b> </label>
+                        <input id="username" name="username" type="text" class="form-control" 
+       pattern="^[A-Za-z ]+$" 
+       title="Username should contain only letters and spaces" required minlength="5">
+
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="password" class="form-label"><b>Password :</b> </label>
+                        <input id="password" name="password" type="password" class="form-control" required minlength="7">
+    
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="loginKey" class="form-label"><b>Login Key :</b> </label>
+                        <input id="loginKey" name="loginKey" type="text" class="form-control" required>
+                        <div class="invalid-feedback">
+                                  Please Enter the Login Key
+                               </div>
+                      </div>
+
+                      <div>
+                        <b>Important: The Login Key changes daily. Please contact the manager to get the current key before logging in.</b>
+                      </div>
+
+                      <span style="padding-left: 30px;">
+                        <button class="btn order-btn">
+            <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="order-btn-span" style="font-weight: 600;">Login</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
+          </button>
+                      </span>
+                      
+                  </form>
+            </div>
+          </div>
+
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Activate Bootstrap 5 form validation
+(() => {
+  'use strict'
+
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+
+document.getElementById("chefLoginForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return;
+  }
+
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      window.location.href = "/dineInOrDelivery"; // or /deliveryOrders depending on type
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: result.error || "Invalid credentials",
+        customClass: {
+            popup: 'custom-alert'
+        }
+      });
+    }
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Server Error",
+      text: "Something went wrong. Please try again later.",
+      customClass: {
+            popup: 'custom-alert'
+        }
+    });
+  }
+});
+
+</script>

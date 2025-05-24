@@ -1,0 +1,185 @@
+<% layout("/layouts/boilerplate") %>
+
+
+<div class="welcome-container">
+    <h1 class="welcome-heading">Welcome to D-Dine!</h1>
+    <p class="welcome-subheading">Where every meal is a celebration of taste and comfort. Step inside to indulge in a delightful dining experience. Let’s get started!</p>
+    </div>  
+
+
+    <div class="main-content">
+
+        <div class="dineIn"  style="border-bottom: 2px solid #f44336;">
+            <form action="/dineIn">
+                <button class="dineIn-content active">
+                    <div class="dineIn-icon">
+                        <img src="https://b.zmtcdn.com/data/o2_assets/30fa0a844f3ba82073e5f78c65c18b371616149662.png" alt="">
+                    </div>
+                    <div class="name-content">Dine-In</div>
+                </button>
+            </form>
+        </div>
+
+        <div class="delivery">
+            <form action="/delivery">
+                <button class="delivery-content active">
+                    <div class="delivery-icon">
+                        <img src="https://cdn-icons-png.freepik.com/512/1820/1820305.png" alt="">
+                    </div>
+                    <div class="name-content">Delivery</div>
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="categories">
+        <h2>Explore our categories to discover delicious offerings</h2>
+        <br>
+
+        <div class="category-container">
+            <a href="/dineIn/appetizers">
+                <div class="item-image">
+                    <img src="/images/appetizers.jpg" alt="Appetizers">
+                </div>
+                <div class="item-name">Appetizers</div>
+            </a>
+        </div>
+
+       <div class="category-container">
+        <a href="/dineIn/mainCourse">
+            <div class="item-image">
+                <img src="/images/mainCourse.jpg" alt="Main Course">
+            </div>
+            <div class="item-name">Main Course</div>
+        </a>
+       </div>
+
+        <div class="category-container">
+            <a href="/dineIn/beverages">
+                <div class="item-image">
+                    <img src="/images/beverages.jpg" alt="Beverages">
+                </div>
+                <div class="item-name">Beverages</div>
+            </a>
+        </div>
+
+        <div class="category-container">
+            <a href="/dineIn/desserts">
+                <div class="item-image">
+                    <img src="/images/desserts.jpg" alt="Desserts">
+                </div>
+                <div class="item-name">Desserts</div>
+            </a>
+        </div>
+
+        <div class="category-container">
+            <a href="/dineIn/mandi">
+                <div class="item-image">
+                    <img src="/images/mandi.jpg" alt="Mandi">
+                </div>
+                <div class="item-name">Mandi</div>
+            </a>
+        </div>
+
+        </div>
+
+        <div class="specials-section">
+    <h2>Chef's Specials</h2>
+    
+    <div class="specials-container">
+        <div class="special-card">
+            <img src="/images/pannerTikkaDelight.webp" alt="Special Dish">
+            <h3>Paneer Tikka Delight</h3>
+            <p>Smoky and rich grilled paneer cubes in savory marinade.</p>
+        </div>
+        <div class="special-card">
+            <img src="/images/chickenMandi.png" alt="Special Dish">
+            <h3>Spicy Chicken Mandi</h3>
+            <p>Aromatic rice and tender chicken infused with spices.</p>
+        </div>
+    </div>
+</div>
+<hr>
+
+
+
+        <div class="testimonials-section">
+    <h2>What Our Customers Say</h2>
+    <div class="testimonial">
+        <b><p>"Best mandi in town! The ambiance is amazing and the staff are very friendly."</p></b>
+        <span>- Arjun R.</span>
+        <br>
+    </div>
+    <div class="testimonial">
+        <b><p>"I love the paneer dishes! Perfect for vegetarians. Highly recommended."</p></b>
+        <span>- Swathi K.</span>
+    </div>
+</div>
+
+<hr>
+
+        <div class="gallery-section">
+    <div class="gallery-grid">
+        <img height="300px" src="/images/ambience.png" alt="Ambience">
+    </div>
+</div>
+<hr>
+<div class="connect-section">
+    <h2>Stay Connected</h2>
+    <b><p>Follow us on social media for updates, events, and offers!</p></b>
+    <div class="social-icons">
+        <a href="https://instagram.com/yourpage" class="disabled-link" target="_blank" aria-label="Instagram">
+            <i class="fab fa-instagram fa-2x"></i>
+        </a>
+        <a href="https://twitter.com/yourpage" class="disabled-link" target="_blank" aria-label="Twitter">
+            <i class="fab fa-twitter fa-2x"></i>
+        </a> 
+        <a href="https://www.threads.net/@yourpage" class="disabled-link" target="_blank" aria-label="Threads">
+            <i class="fab fa-threads fa-2x"></i> <!-- Custom Threads workaround below -->
+        </a>
+        <a href="https://facebook.com/yourpage" class="disabled-link" target="_blank" aria-label="Facebook">
+            <i class="fab fa-facebook fa-2x"></i>
+        </a>
+    </div>
+</div>
+
+
+
+
+       
+       
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const excludePaths = [
+      "/appetizers",
+      "/beverages",
+      "/mainCourse",
+      "/desserts",
+      "/mandi",
+      "/checkOut",
+      "/viewCart",
+      "/dineInOrders",
+      "/deliveryOrders"
+    ];
+
+    const currentPath = window.location.pathname;
+    if (excludePaths.includes(currentPath)) return;
+
+    const orderBarBtn = document.querySelector(".orderStatusBar-btn");
+    if (!orderBarBtn) return;
+
+    if (
+      sessionStorage.getItem("showOrderBar") === "true" ||
+      sessionStorage.getItem("barPhase") === "final"
+    ) {
+      orderBarBtn.classList.remove("hidden-bar");
+  // Move the order bar up by 20px
+  orderBarBtn.style.position = "fixed";
+  orderBarBtn.style.bottom = "40px"; // adjust from default position
+  orderBarBtn.style.transition = "bottom 0.3s ease"; // smooth transition
+      
+    }
+  });
+</script>
+
