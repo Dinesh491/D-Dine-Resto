@@ -248,7 +248,10 @@ You can pay via UPI, Cash, or Online Payment at the time of delivery.
                   icon: 'warning',
                   title: 'Missing Information!',
                   text: 'Please fill in all required fields.',
-                  confirmButtonColor: '#d33'
+                  confirmButtonColor: '#d33',
+                  customClass: {
+                  popup: 'custom-alert'
+              }
               });
               return;
           }
@@ -265,7 +268,10 @@ You can pay via UPI, Cash, or Online Payment at the time of delivery.
                   icon: 'error',
                   title: 'Service Unavailable!',
                   text: 'We only deliver to Warangal and Hanamkonda in Telangana.',
-                  confirmButtonColor: '#d33'
+                  confirmButtonColor: '#d33',
+                  customClass: {
+                  popup: 'custom-alert'
+              }
               });
               return;
           }

@@ -694,14 +694,14 @@ app.get("/unauthorizedAccess", (req, res) => {
     res.render("menus/unauthorizedAccess.ejs", { attemptedRoute });
 });
 
-
-
-
 app.post("/clear-cart", (req, res) => {
     req.session.cart = [];
     res.json({ success: true });
 });
 
+app.use((req, res) => {
+  res.status(404).render('404', { path: req.originalUrl });
+});
 
 
 const PORT = process.env.PORT || 8080;
