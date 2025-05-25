@@ -700,7 +700,7 @@ app.post("/clear-cart", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render('404', { path: req.originalUrl });
+  res.status(404).render("menus/404", { path: req.originalUrl });
 });
 
 
