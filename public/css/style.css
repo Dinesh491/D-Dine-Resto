@@ -761,20 +761,122 @@
 
 }
 
+/* ============================= */
+/*        RESPONSIVE STYLES     */
+/* ============================= */
 
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .logo {
+    margin-left: 30px;
+    height: 55px;
+  }
 
+  .main-content {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 
+  .dineIn, .delivery {
+    flex: 1 1 40%;
+  }
 
+  .categories {
+    padding: 20px;
+    margin-left: 0;
+  }
 
-  
+  .view-cart, .orderStatusBar-btn, .deliveryStatusBar-btn {
+    width: 90%;
+    left: 5%;
+    right: 5%;
+  }
 
-  
+  .item-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-  
+  .item-info {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
 
+  .dish-image img {
+    width: 100%;
+    height: auto;
+  }
 
+  .order-page {
+    width: 90%;
+  }
+}
 
+/* Mobiles (up to 767px) */
+@media (max-width: 767px) {
+  .logo {
+    margin-left: 10px;
+    height: 50px;
+  }
 
+  h2 {
+    font-size: 22px;
+    padding-left: 5%;
+  }
 
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .dineIn, .delivery {
+    width: 100%;
+    padding: 10px 0;
+  }
 
+  .category-container {
+    width: 150px;
+    margin: 10px auto;
+  }
+
+  .specials-container {
+    justify-content: center;
+  }
+
+  .special-card {
+    width: 90%;
+  }
+
+  .item-card, .order-item-card, .order-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image-container button, .counter {
+    width: 100px;
+    font-size: 10px;
+  }
+
+  .orderStatusBar-btn, .deliveryStatusBar-btn, .view-cart {
+    width: 95%;
+    left: 2.5%;
+    right: 2.5%;
+  }
+
+  .checkout-background {
+    padding: 10px;
+  }
+
+  .order-page {
+    width: 100%;
+    padding: 20px 15px;
+  }
+
+  .item-nums {
+    width: 100%;
+  }
+
+  .social-icons a {
+    margin-right: 10px;
+  }
+}
