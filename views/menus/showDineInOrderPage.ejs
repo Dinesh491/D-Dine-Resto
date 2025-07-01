@@ -8,20 +8,15 @@
     <hr>
 <br>
     <% for(let item of sendOrderItems.orderItems) { %>    
-        <div style="margin-bottom: 20px;" class="order-item-card"  data-id="<%= item.id %>" >
-            <div class="order-item-info">
-                <h6 class="order-item-name"><%= item.Name %></h6>
-            </div>
-            
-                    <span style="font-weight: 700; margin-left: -70px;"> Qunatity : <%= item.Quantity %></span>
-                
-            <div>
-                <span class="item-cost">
-                    <span class="total-item-cost" style="font-weight: 700;">&#8377; <%= item.Price%></span>
-                </span>
-            </div>
-        </div>
-    <% } %>
+  <div class="order-item-card" data-id="<%= item.id %>">
+    <div class="order-item-flex">
+      <div class="order-item-name"><%= item.Name %></div>
+      <div class="order-item-qty">Quantity: <%= item.Quantity %></div>
+      <div class="item-cost">&#8377; <%= item.Price %></div>
+    </div>
+  </div>
+<% } %>
+
 
       <br>
 
