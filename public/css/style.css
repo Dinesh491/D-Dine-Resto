@@ -1012,3 +1012,17 @@
   font-weight: bold;
 }
 
+.counter button, .order-cou button {
+  background-color: white;
+  border: 2px solid #2ecc71; /* optional green border */
+  color: #2ecc71; /* green text */
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
