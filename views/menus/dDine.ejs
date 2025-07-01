@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -14,7 +14,7 @@
 
     body, html {
       height: 100%;
-      overflow: hidden;
+      overflow: hidden; /* background remains fixed */
     }
 
     .background {
@@ -40,7 +40,7 @@
     }
 
     .main-page {
-      height: 700px;
+      max-height: 90vh;
       width: 500px;
       background-color: rgba(255, 255, 255, 0.6);
       border-radius: 20px;
@@ -48,6 +48,8 @@
       padding: 30px 40px;
       backdrop-filter: blur(10px);
       text-align: center;
+      overflow-y: auto; /* enables internal scrolling */
+      scroll-behavior: smooth;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -67,9 +69,10 @@
       justify-content: center;
       gap: 1.5rem;
       margin-top: 2rem;
+      flex-wrap: wrap;
     }
 
-    .button {
+    .btn {
       padding: 1rem 2rem;
       font-size: 1.1rem;
       border: none;
@@ -80,60 +83,77 @@
       transition: background-color 0.3s;
     }
 
-    .button:hover {
+    .btn:hover {
       background-color: #e45757;
     }
 
     .choose-btn {
-  
-  display: block;
-  margin: 30px auto 10px auto; /* centers the button */
-  width: 80%;
-  background-color: #2E2E2E !important;
-  padding: 10px 0;
-  text-align: center;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-}
-.choose-btn-span {
-  color: #D4AF37;
-  letter-spacing: 1px;
-}
+      display: block;
+      margin: 30px auto 10px auto;
+      width: 80%;
+      background-color: #2E2E2E !important;
+      padding: 10px 0;
+      text-align: center;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
 
-.choose-btn:hover {
-  background-color: #3d3d3d !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
+    .choose-btn-span {
+      color: #D4AF37;
+      letter-spacing: 1px;
+    }
 
-.choose-btn:active {
-  transform: scale(0.98); /* click animation */
-  background-color: #1f1f1f !important; /* slightly darker on click */
-}
+    .choose-btn:hover {
+      background-color: #3d3d3d !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.1); }
-}
+    .choose-btn:active {
+      transform: scale(0.98);
+      background-color: #1f1f1f !important;
+    }
 
-@keyframes shake-utensils {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  50% { transform: rotate(-10deg); }
-  75% { transform: rotate(5deg); }
-}
+    @keyframes flicker {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
 
-.fire-emoji {
-  display: inline-block;
-  animation: flicker 1s infinite;
-}
+    @keyframes shake-utensils {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(10deg); }
+      50% { transform: rotate(-10deg); }
+      75% { transform: rotate(5deg); }
+    }
 
-.utensils-icon {
-  display: inline-block;
-  animation: shake-utensils 1.5s infinite;
-}
+    .fire-emoji {
+      display: inline-block;
+      animation: flicker 1s infinite;
+    }
+
+    .utensils-icon {
+      display: inline-block;
+      animation: shake-utensils 1.5s infinite;
+    }
+
+    /* For very small screens */
+    @media (max-width: 520px) {
+      .main-page {
+        width: 90%;
+        padding: 20px;
+      }
+
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .choose-btn {
+        width: 100%;
+      }
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -141,37 +161,35 @@
 
   <div class="background">
     <div class="main-page">
-  <img src="/images/logo2.webp" alt="D-Dine Logo" class="logo2" />
+      <img src="/images/logo2.webp" alt="D-Dine Logo" class="logo2" />
 
-  <!-- Added heading and description -->
-  <h2 style="margin-bottom: 10px; color: black;">Welcome to D-Dine!</h2>
-  <p style="font-size: 1.1rem; color: #333; margin-bottom: 20px;">
-    Please choose how you'd like to enjoy your meal today. Whether you're dining in with us or ordering to your doorstep, we’ve got you covered!
-  </p>
+      <h2 style="margin-bottom: 10px; color: black;">Welcome to D-Dine!</h2>
+      <p style="font-size: 1.1rem; color: #333; margin-bottom: 20px;">
+        Please choose how you'd like to enjoy your meal today. Whether you're dining in with us or ordering to your doorstep, we’ve got you covered!
+      </p>
 
-  <div class="button-group">
-    <button class="btn choose-btn" onclick="window.location.href='/dineIn'">
-      <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
-      <span class="order-btn-span" style="font-weight: 600;">DineIn</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
-    </button>
+      <div class="button-group">
+        <button class="btn choose-btn" onclick="window.location.href='/dineIn'">
+          <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
+          <span class="order-btn-span" style="font-weight: 600;">DineIn</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
+        </button>
 
-    <button class="btn choose-btn" onclick="window.location.href='/delivery'">
-      <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
-      <span class="choose-btn-span" style="font-weight: 600;">Delivery</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
-    </button>
-    
-  </div>
-  <div style="margin-top: 30px; font-size: 0.9rem; color: #555; background: rgba(255, 255, 255, 0.7); padding: 10px; border-radius: 10px;">
-  <strong>Our Restaurant Location:</strong><br />
-  Street No - 5, Kothawada, Warangal, TELANGANA, 506002<br />
-  (Serving customers only within Warangal and Hanamkonda city limits)
-</div>
-</div>
+        <button class="btn choose-btn" onclick="window.location.href='/delivery'">
+          <span class="fire-emoji">🔥</span>&nbsp;&nbsp;&nbsp;&nbsp;
+          <span class="choose-btn-span" style="font-weight: 600;">Delivery</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <i class="fas fa-utensils utensils-icon" style="color: aliceblue;"></i>
+        </button>
+      </div>
 
+      <div style="margin-top: 30px; font-size: 0.9rem; color: #555; background: rgba(255, 255, 255, 0.7); padding: 10px; border-radius: 10px;">
+        <strong>Our Restaurant Location:</strong><br />
+        Street No - 5, Kothawada, Warangal, TELANGANA, 506002<br />
+        (Serving customers only within Warangal and Hanamkonda city limits)
+      </div>
+    </div>
   </div>
 
 </body>

@@ -978,3 +978,37 @@
   margin-top: 5px;
 }
 
+/* Counter Styles */
+.counter, .order-cou {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.counter button, .order-cou button {
+  background-color: #ff5e00;
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.counter button:hover, .order-cou button:hover {
+  background-color: #d94c00;
+}
+
+.counter .quantity, .order-cou .order-qua {
+  min-width: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
